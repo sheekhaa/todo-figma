@@ -1,38 +1,97 @@
-.App {
+/* *{
+  background-color: #A6F2A6;
+} */
+
+/* .task-container{ 
+  background-color: #A6F2A6;
+} */
+/* image */
+.cat-image ,css-a1seme-euiImage-original{
+  margin-top: 20px;
+  height: 174px;
+  width: 337px;
+  object-fit:contain ;
+}
+
+/* welcome */
+.welcome.css-1rs9swf-euiText-m{
+  margin-top: 50px;
+  font-weight: 600 !important;
+  font-size: 18px;
+}
+
+/* text */
+.css-1rs9swf-euiText-m{  
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: 600 !important;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.link-text, css-1rs9swf-euiText-m{
+  margin-top:-20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* input-field */
+.text.css-1dnt4yt-euiFieldText{
+  color: #515050;   
+  font-size: 14px;
+  width: 375px;
+  height: 50px;
+  border-radius: 100px;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.15) !important;
+  border-color: transparent !important;
+}
+.field-spacing, css-9sbomz-euiFlexItem-grow-1{
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+/* link */
+.link.css-v5wno3-euiLink-primary{
+  font-weight: bold;
+  font-size: 16px;
+  color: #2D5539;
 }
 
-.App-link {
-  color: #61dafb;
+/* button */
+button.css-50yc6y-euiButtonDisplay-m-defaultMinWidth-base-primary {
+  font-weight: 500 !important; /* medium */
+  border: none;
+  /* background-color: #68C168 !important; */
+  font-size: 18px;
+  color: black;  
+  width: 300px; 
+  height: 40px;
+  border-radius: 20px;   
+} 
+
+/* .eui-textTruncate{
+  background-color: #68C168;
+} */
+
+/* .css-1lhgt31-euiButtonDisplayContent{
+  background-color: #68C168;
+} */
+
+/* .button ,css-50yc6y-euiButtonDisplay-m-defaultMinWidth-base-primary:hover{
+  color: black;  
+  transform: scale(1.01);
+  background-color: black;
+  
+} */
+
+.div-button{
+  text-align: center;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* profile-container */
+/* .profile-container{ 
+  background-color: #8EFE8E;
+} */
+
+
+
+
+
+
+

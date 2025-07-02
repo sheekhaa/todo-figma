@@ -1,25 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Getstarted from './pages/GetStarted';
+import SigninPage from './pages/SigninPage';
+import LoginPage from './pages/LoginPage';
+import { EuiProvider } from '@elastic/eui';
+import LandingPage from './pages/LandingPage';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  return (   
+    <EuiProvider>   
+      <Router>
+        <Routes>
+          <Route path='/' element={<Getstarted />} />
+          <Route path='/signup' element={<SigninPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/home' element = {<LandingPage/>}/>
+        </Routes>
+      </Router>
+    </EuiProvider>
   );
 }
 
