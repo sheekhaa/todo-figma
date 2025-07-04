@@ -2,9 +2,9 @@
   background-color: #A6F2A6;
 } */
 
-/* .task-container{ 
-  background-color: #A6F2A6;
-} */
+.task-container{ 
+  margin: 20px 20px 0 20px ;
+}
 /* image */
 .cat-image ,css-a1seme-euiImage-original{
   margin-top: 20px;
@@ -15,7 +15,7 @@
 
 /* welcome */
 .welcome.css-1rs9swf-euiText-m{
-  margin-top: 50px;
+  margin-top: 20px;
   font-weight: 600 !important;
   font-size: 18px;
 }
@@ -89,6 +89,25 @@ button.css-50yc6y-euiButtonDisplay-m-defaultMinWidth-base-primary {
   background-color: #8EFE8E;
 } */
 
+.search-bar, css-ins9b-euiFieldSearch{  
+  border-radius: 15px !important;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.15) !important;
+  border-color: transparent !important;  
+}
+
+.table-details{  
+  border-radius: 12px !important;
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.15) !important;
+  border-color: transparent !important;  
+}
+
+
+/* add bu */
+.add-button, css-6r0ls0-euiButtonDisplay-m-defaultMinWidth-base-accentSecondary{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
 
 
 

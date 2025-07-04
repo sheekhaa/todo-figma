@@ -1,4 +1,4 @@
-import { EuiBasicTable, EuiBasicTableColumn, EuiButton, EuiButtonEmpty, EuiConfirmModal, EuiFieldText, EuiFlexGroup, EuiFlexItem, EuiFlyout, EuiFlyoutBody, EuiFlyoutFooter, EuiFlyoutHeader, EuiIcon, EuiPopover, EuiText, EuiTitle, useGeneratedHtmlId, EuiGlobalToastList, EuiGlobalToastListToast  } from "@elastic/eui";
+import { Criteria, EuiBasicTable, EuiBasicTableColumn, EuiButton, EuiButtonEmpty, EuiConfirmModal, EuiFieldText, EuiFlexGroup, EuiFlexItem, EuiFlyout, EuiFlyoutBody, EuiFlyoutFooter, EuiFlyoutHeader, EuiIcon, EuiPopover, EuiText, EuiTitle, useGeneratedHtmlId, EuiGlobalToastList, EuiGlobalToastListToast, EuiFieldSearch  } from "@elastic/eui";
 
 import React, { useState } from "react";
 
@@ -7,22 +7,32 @@ interface Task{
   tasks: string;
 }
 const LandingPage:React.FC = ()=>{
+
+  //search hook
+  const [searchTerm, setSearchTerm] = useState("")//for search
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("") //search using debouncing  
+  //popover hooks edit delete
   const [openPopOverId, setOpenPopoverId] = useState<number | null>(null);
-  //flyout
+  //flyout hooks
   const [isFlyoutVisible, setIsFlyoutVisible] = useState(false);
   const [editFlyout, setEditFlyout] = useState<Task | null>(null);
   const [editTask, setEditTask] = useState('');
+  //add hooks
+  const [addTask, setAddTask] = useState(false);
+  
 
-  //for delete modal
+  //delete modal hooks
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [deleteModal, setDeleteModal] = useState<Task | null>(null);
 
-
-  //for delete toast
+  
+  //delete toast hooks
   const [toasts, setToasts] = useState<EuiGlobalToastListToast[]>([]);
   
-
-
+  // pagination hooks
+  const [pageIndex, setPageIndex] = useState(0); //current page (0-based)
+  const [pageSize, setPageSize] = useState(4); //number of items per page 
+  
   //FOR MODAL
   const closeModal = () => setIsModalVisible(false);
   const showModal = (item: Task) =>{
@@ -30,6 +40,20 @@ const LandingPage:React.FC = ()=>{
     setDeleteModal(item); //set taask to delete
   }; 
   const modalTitleId = useGeneratedHtmlId();
+
+
+  //validation functionality
+  const addValidationToast = () =>{
+    setToasts([
+      ...toasts,
+      {
+        id: String(Date.now()),
+        title: "Task field cannot be empty",
+        color: "warning",
+        iconType: "alert",
+      },
+    ]);
+  };
 
   //for toast
   const addDeleteToast = () => {
@@ -42,7 +66,7 @@ const LandingPage:React.FC = ()=>{
       }
     ]);
   };  
-    
+  
 
   //for table data
    const [tasks, setTasks] = useState<Task[]> ([
@@ -102,9 +126,7 @@ const LandingPage:React.FC = ()=>{
                 <EuiButtonEmpty iconType="trash" color="danger"  
                 onClick={()=>{
                   showModal(item);
-                  setIsModalVisible(true);
-                  
-                  
+                  setIsModalVisible(true);               
                 }}
                 >Delete</EuiButtonEmpty>
               </EuiFlexItem>
@@ -114,6 +136,45 @@ const LandingPage:React.FC = ()=>{
       } 
     },
   ] 
+
+   //debouncing 
+  React.useEffect(()=>{
+    const timerId = setTimeout(()=>{
+      setDebouncedSearchTerm(searchTerm);
+      setPageIndex(0); //reset tofirst page on new search
+    }, 500);
+    return()=>{
+      clearTimeout(timerId);
+    };
+  }, [searchTerm]);
+
+  //add filtered task based on searchTerm
+  const filteredTasks = tasks.filter((task)=>
+    task.tasks.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+  );    
+  
+  // pagination  functionality
+  const onTableChange = ({page}: Criteria<Task>)=>{
+    if(page){
+      const {index, size} = page;
+      setPageIndex(index);
+      setPageSize(size);      
+    }
+  };
+  
+  const startIndex= pageIndex * pageSize;
+  let pageOfItems = filteredTasks.slice(
+    startIndex,
+    Math.min (startIndex + pageSize,filteredTasks.length)
+  );
+
+  const pagination = {
+    pageIndex,
+    pageSize,
+    totalItemCount: filteredTasks.length,
+    pageSizeOptions: [4,8, 16],
+    hidePerPageOptions: false,    
+  }
 
   //flyout handle for edit
   const simpleFlyoutTitleId = useGeneratedHtmlId();
@@ -153,15 +214,29 @@ const LandingPage:React.FC = ()=>{
           </EuiFlexItem>
           <EuiFlexItem>
             <EuiButton color="success" onClick={()=>{
-              if(editFlyout){
-                const updatedTask = tasks.map((task)=> task.id===editFlyout.id ? {...task, tasks:editTask} : task);
+              if(!editTask.trim()){
+                addValidationToast(); //show toast if input is empty or whitespace 
+                return; //prevent add 
+              }
+              if(addTask){                
+                //add new task
+                const newTask: Task= {
+                  id: tasks.length > 0 ? Math.max(...tasks.map((t)=>t.id)) + 1:1, //first task start with id: 1 and new tasks get id = last id + 1
+                  tasks: editTask, 
+                };
+                setTasks([...tasks, newTask]);
+
+              }else {
+                //update existing task
+                const updatedTask = tasks.map((task)=> task.id===editFlyout?.id ? {...task, tasks:editTask} : task);
                 setTasks(updatedTask); //update table data
+                }
                 setIsFlyoutVisible(false); // close flyout
                 setEditFlyout(null); //reset edit state
                 setEditTask(""); // clear input
-              }
-              }
-             }>Update</EuiButton>
+                setAddTask(false);
+              }}
+              >{addTask ? "Add Task" : "Update"}</EuiButton>
           </EuiFlexItem>
         </EuiFlexGroup>
       </EuiFlyoutFooter>
@@ -169,17 +244,29 @@ const LandingPage:React.FC = ()=>{
   )
 
   return(
-    <div>
-      <div className="profile-container">
-          <p>welcome shikha kandel</p>
-      </div>
+    <>
+      
 
       <div className="task-container">
-        <h5>Task LisT</h5>
-        <img className="image-icon" src="https://img.icons8.com/?size=100&id=1501&format=png&color=309040" alt="" height={25} width={25}/> 
-        <EuiBasicTable
-         items={tasks}
+       <p style={{fontWeight: 600, fontSize: "20px", marginBottom: "10px"}}>Task List</p>       
+        <EuiFlexGroup>
+          <EuiFlexItem>
+            <EuiFieldSearch className="search-bar" onChange={(e)=> setSearchTerm(e.target.value)}isClearable placeholder="search task....."></EuiFieldSearch>
+          </EuiFlexItem>
+          <EuiFlexItem grow = {false}>
+            <EuiButton className="add-button" color="accentSecondary" onClick={()=>{
+              setEditTask(""); //clear task input
+              setAddTask(true);  //add operation
+              setIsFlyoutVisible(true) //open flyout
+            }} >Add</EuiButton>
+          </EuiFlexItem>
+         </EuiFlexGroup>
+
+        <EuiBasicTable className="table-details"
+         items={pageOfItems}
          columns={columns}
+         pagination={pagination}
+         onChange={onTableChange}
          rowHeader="task"
         />        
       </div>
@@ -215,10 +302,8 @@ const LandingPage:React.FC = ()=>{
         toasts={toasts}
           dismissToast={(removedToast) => setToasts(toasts.filter((t) => t.id !== removedToast.id))}
         toastLifeTimeMs={6000}
-          />
-
-
-    </div>       
+          />  
+    </>    
   )
 }
 export default LandingPage;

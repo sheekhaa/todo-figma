@@ -20,12 +20,12 @@ const Getstarted: React.FC = ()=>{
 
     
     <EuiFlexItem grow = {false}>
-    <div className="div-button"><EuiButton className="button">Login</EuiButton></div>
+    <div className="div-button"><EuiButton className="button" onClick={()=>navigate('/login')}>Login</EuiButton></div>
     </EuiFlexItem>
    
     <EuiFlexItem grow = {false}>   
     <EuiText className="link-text"> Don't have an account?
-      <EuiLink className="link" onClick={()=>navigate('/signup')}>SignUp</EuiLink>
+      <EuiLink className="link" onClick={()=>navigate('/signup')}>Sign Up</EuiLink>
       </EuiText> 
     </EuiFlexItem>    
     </EuiFlexGroup>    
